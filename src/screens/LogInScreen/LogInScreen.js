@@ -7,10 +7,21 @@ import CustomButton from '../../components/CustomButton/CustomButton'
 import { ScrollView } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useForm} from 'react-hook-form'
+
 
 const LogInScreen=({navigation})=>{
 
     const {height} = useWindowDimensions()
+
+    const {control,handleSubmit,formState:{errors}} = useForm()
+
+
+    const handleLogIn=(data)=>{
+        console.log('data',data)
+    }
+
+
     return (
         <KeyboardAvoidingView style={styles.root} behavior="padding">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -27,9 +38,23 @@ const LogInScreen=({navigation})=>{
             <Text style={[styles.text,styles.welcomeText]}>Welcome!</Text>
             <Text style={styles.text}>It's great to have you on board.Please log in to access your account.</Text>
 
-            <CustomInput placeholder='Username'/>
-            <CustomInput placeholder='Password' secureTextEntry={true}/>
-            <CustomButton text='Log In' onPress={()=>console.warn('Pressing')} />
+            <CustomInput 
+            control={control} 
+            rules={{required:'Username is required',}} 
+            name='username' 
+            placeholder='Username'
+            
+            
+            />
+            <CustomInput 
+            control={control} 
+            rules={{required:'Password is required',   
+            minLength:{value:3 ,message:'Password should be minimum 3 characters long'}
+            }} 
+            name='password' 
+            placeholder='Password' 
+            secureTextEntry={true}/>
+            <CustomButton text='Log In' onPress={handleSubmit(handleLogIn)} />
 
 
             <CustomButton text='Forgot password?' onPress={()=>navigation.navigate('ForgotPassword')} type='TERTIARY'/>

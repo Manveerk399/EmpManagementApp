@@ -3,8 +3,12 @@ import React from 'react'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import CustomInput from '../../components/CustomInput'
 import {LinearGradient} from 'expo-linear-gradient'
+import {useForm} from 'react-hook-form'
 
 const ResetPasswordScreen = ({navigation}) => {
+
+  const {control,handleSubmit,formState:{errors}} = useForm()
+
   return (
     
         <LinearGradient
@@ -15,10 +19,14 @@ const ResetPasswordScreen = ({navigation}) => {
         <Text style={styles.title}>Reset your password</Text>
 
         <CustomInput 
+        name='code'
+        control={control}
         placeholder='Enter the confirmation code'
         />
 
        <CustomInput 
+       control={control}
+       name='password'
         placeholder='Enter your new password'
         />
 
