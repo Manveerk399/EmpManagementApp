@@ -8,7 +8,11 @@ const CustomInput=({placeholder,secureTextEntry=false})=>{
           <TextInput 
           placeholder={placeholder} 
           style={styles.input} 
-          secureTextEntry={secureTextEntry}/>
+          secureTextEntry={secureTextEntry}
+          placeholderTextColor="gray"
+          
+          />
+        
         </View>
     )
 }

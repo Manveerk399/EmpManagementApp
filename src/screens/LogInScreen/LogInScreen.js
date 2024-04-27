@@ -21,7 +21,7 @@ const LogInScreen=({navigation})=>{
             </View>
 
         <View style={styles.imageContainer}>
-            <Image source={Logo} style={[styles.logo,{height:height*0.4}]} resizeMode='contain'/>
+            <Image source={Logo} style={[styles.logo,{height:height*0.3}]} resizeMode='contain'/>
         </View>
         <View style={styles.formContainer}>
             <Text style={[styles.text,styles.welcomeText]}>Welcome!</Text>
@@ -32,7 +32,7 @@ const LogInScreen=({navigation})=>{
             <CustomButton text='Log In' onPress={()=>console.warn('Pressing')} />
 
 
-            <CustomButton text='Forgot password?' onPress={()=>console.warn('forgot password')} type='TERTIARY'/>
+            <CustomButton text='Forgot password?' onPress={()=>navigation.navigate('ForgotPassword')} type='TERTIARY'/>
             </View>
         </ScrollView>
         </KeyboardAvoidingView>
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
 
     imageContainer:{
         alignItems:'center',
+        flex:1
         
     },
 
