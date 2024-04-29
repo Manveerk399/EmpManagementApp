@@ -8,17 +8,29 @@ import { ScrollView } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useForm} from 'react-hook-form'
+import { FIREBASE_AUTH } from '../../firebase/config'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 
 const LogInScreen=({navigation})=>{
 
     const {height} = useWindowDimensions()
+    const auth = FIREBASE_AUTH
 
     const {control,handleSubmit,formState:{errors}} = useForm()
 
 
-    const handleLogIn=(data)=>{
+    const handleLogIn=async(data)=>{
         console.log('data',data)
+        try{
+            const response = await signInWithEmailAndPassword(auth,data.username,data.password)
+            console.log(response)
+            navigation.navigate('Dashboard')
+        }catch(error){
+            console.log(error)
+        }finally{
+
+        }
     }
 
 
