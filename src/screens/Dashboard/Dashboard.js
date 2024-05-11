@@ -1,9 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { Button } from 'react-native'
+import { Button ,ScrollView} from 'react-native'
  import { FIREBASE_AUTH } from '../../firebase/config'
 import { signOut } from 'firebase/auth'
 import CustomButton from '../../components/CustomButton/CustomButton'
+import Welcome from './Welcome'
+import Attendance from '../Attendance'
+import CustomMenu from './Menu/CustomMenu'
 
 const Dashboard = ({navigation}) => {
 
@@ -19,9 +22,12 @@ const Dashboard = ({navigation}) => {
 }
 
   return (
-    <View>
-      <CustomButton onPress={signOutUser} text='Sign Out'/>
-    </View>
+    <ScrollView style={{flex:1,backgroundColor:'#f2f2f2'}} showsVerticalScrollIndicator={false}>
+      <Welcome/>
+      <Attendance/>
+     <CustomMenu/>
+
+    </ScrollView>
   )
 }
 

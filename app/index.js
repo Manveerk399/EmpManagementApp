@@ -5,6 +5,7 @@ import AccessStack from "../routes/AccessStack";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../src/firebase/config";
+import { PaperProvider } from "react-native-paper";
 
 
 const App=()=>{
@@ -24,8 +25,10 @@ const App=()=>{
 
 
     return (
-        <SafeAreaView style={styles.root}  >          
-            <AccessStack user={user}/>          
+        <SafeAreaView style={styles.root}  > 
+        <PaperProvider>         
+            <AccessStack user={user}/> 
+            </PaperProvider>         
         </SafeAreaView>
     )
 

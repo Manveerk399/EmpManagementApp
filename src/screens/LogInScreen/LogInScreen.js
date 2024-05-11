@@ -37,12 +37,6 @@ const LogInScreen=({navigation})=>{
     return (
         <KeyboardAvoidingView style={styles.root} behavior="padding">
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View>
-                <TouchableOpacity style={{ flex: 1,margin:12}} onPress={() => navigation.goBack()}>
-                <Icon name="arrow-back" size={25} color="#3385ff" />
-                </TouchableOpacity>
-            </View>
-
         <View style={styles.imageContainer}>
             <Image source={Logo} style={[styles.logo,{height:height*0.3}]} resizeMode='contain'/>
         </View>
