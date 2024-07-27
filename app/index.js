@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react"; 
 import { SafeAreaView,StyleSheet,Text } from "react-native"; 
 import 'react-native-gesture-handler';
-import AccessStack from "../routes/AccessStack";
+import AccessStack, { AdminPageStack } from "../routes/AccessStack";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../src/firebase/config";
 import { PaperProvider } from "react-native-paper";
-
+import { AuthProvider } from "../src/context/AuthContext";
+import { StatusBar } from 'react-native';
+import 'react-native-reanimated'
+import 'react-native-gesture-handler';
+import { MyDrawer } from "./drawer";
+import { MyStack } from "./_layout";
 
 const App=()=>{
 
-    const [user,setUser] = useState(null)
-
-
-   useEffect(()=>{
-    onAuthStateChanged(FIREBASE_AUTH,(user)=>{
-        console.log('user',user)
-        setUser(user)
-    })
-   },[])
-
-
-
+        StatusBar.setBarStyle('dark-content');
 
 
     return (
         <SafeAreaView style={styles.root}  > 
-        <PaperProvider>         
-            <AccessStack user={user}/> 
+       <StatusBar barStyle="dark-content" backgroundColor="white" />
+        <PaperProvider>
+            <AuthProvider> 
+            
+            <MyDrawer />
+          
+       
+            </AuthProvider>  
             </PaperProvider>         
         </SafeAreaView>
     )
@@ -37,7 +37,7 @@ const App=()=>{
 const styles = StyleSheet.create({
     root:{
         flex:1,
-        backgroundColor:'white'
+        // backgroundColor:'white'
     },
 })
 

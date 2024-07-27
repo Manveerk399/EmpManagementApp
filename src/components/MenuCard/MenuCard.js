@@ -1,28 +1,31 @@
-import { StyleSheet, Text, View,Platform } from 'react-native'
+import { StyleSheet, Text, View,Platform,Pressable } from 'react-native'
 import React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
+
 const Icons={
     Leave:<MaterialCommunityIcons name="calendar-refresh-outline" size={24} color='white' />
 }
 
 
-const MenuCard = ({title ,backgroundColor}) => {
+const MenuCard = ({title ,backgroundColor, onPress}) => {
     return (
+    <Pressable onPress={onPress}>
       <View style={[styles.card,shadowstyles.shadowStyle]}>
         <View style={[styles.iconContainer,{backgroundColor:backgroundColor}]}>
         {title==='Leaves' && <MaterialCommunityIcons name="calendar-refresh-outline" size={24} color='white' />}
         {title==='Attendance' && <MaterialCommunityIcons name="calendar-month-outline" size={24} color='white' />}
         {title==='Pay Slip' && <FontAwesome5 name="file-invoice-dollar" size={24} color="white" />}
-        {title==='Tasks' && <FontAwesome5 name="tasks" size={24} color="white" />}
+        {title==='Shifts' && <MaterialCommunityIcons name="calendar-account" size={24} color="white" />}
         {title==='Teams' && <AntDesign name="team" size={24} color="white" />}
         {title==='Support' && <MaterialIcons name="contact-support" size={24} color="white" />}
         </View>
         <Text>{title}</Text>
       </View>
+      </Pressable>
     )
   }
 

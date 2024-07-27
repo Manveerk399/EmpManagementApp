@@ -8,6 +8,7 @@
       "expo-router"
     ],
     "name": "EmpManagementApp",
-    "slug": "EmpManagementApp"
+    "slug": "EmpManagementApp",
+    "userInterfaceStyle": "automatic"
   }
 }

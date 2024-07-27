@@ -1,7 +1,7 @@
 import { View, Text,StyleSheet,Image } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
-import StartImg from '../../../assets/getstart.jpg'
+import StartImg from '../../assets/getstart.jpg'
 import { useWindowDimensions } from 'react-native';
 import CustomButton from '../../components/CustomButton/CustomButton';
 

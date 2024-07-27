@@ -6,6 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 
+
 const Menu=({color,size})=>{
 return <Ionicons name="menu-outline" size={size} color={color} />
 }

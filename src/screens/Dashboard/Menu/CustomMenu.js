@@ -5,17 +5,17 @@ import { shadowstyles } from '../../../components/MenuCard/MenuCard'
 import icons from '../../../constants/icons'
 
 
-const CustomMenu = () => {
+const CustomMenu = ({navigation}) => {
   return (
     <View style={styles.root}>
     <Text style={styles.title}>Overview</Text>
     <View style={[styles.grid,shadowstyles.shadowStyle]}>
-        <MenuCard title='Leaves' backgroundColor='#ffbb33'/>
-        <MenuCard title='Attendance' backgroundColor='#1a75ff'/>
+        <MenuCard title='Leaves' backgroundColor='#ffbb33' onPress={()=>navigation.navigate('Leave')}/>
+        <MenuCard title='Attendance' backgroundColor='#1a75ff' onPress={()=>navigation.navigate('Attendance')}/>
         <MenuCard title='Pay Slip' backgroundColor='#47d147'/>
-        <MenuCard title='Tasks'backgroundColor='#aa80ff'/>
+        <MenuCard title='Shifts'backgroundColor='#aa80ff' onPress={()=>navigation.navigate('Shifts')}/>
         <MenuCard title='Support' backgroundColor='#ff9966'/>
-        <MenuCard title='Teams' backgroundColor='#33ccff'/>    
+        <MenuCard title='Teams' backgroundColor='#33ccff' onPress={()=>navigation.navigate('Teams')}/>    
     </View>
     </View>
   )

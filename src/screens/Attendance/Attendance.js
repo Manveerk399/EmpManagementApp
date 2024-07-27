@@ -1,29 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import ScreenHeaderButton from '../../components/Header/ScreenHeaderButton'
-import icons from '../../constants/icons'
 import { getDate, getTime } from '../../utility/getDate'
-import { Chip,useTheme } from 'react-native-paper'
-import { Entypo } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { set } from 'react-hook-form'
-import { shadowstyles } from '../../components/MenuCard/MenuCard'
+import { useAttendance } from './useAttendance'
+import { useAuthContext } from '../../context/AuthContext'
+import { getCurrentDate } from '../../utility/getDate'
+import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { calculateTimeDifference } from '../../utility/getDate'
+import { getFirestore, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config'
 
 const Attendance = () => {
 
+    const {addAttendanceRecord,calculateAttendance,test} = useAttendance()
+    const {profile,shift} = useAuthContext()
     let currenttime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     const [clockIn,setClockIn] = useState(null)
     const [clockOut,setClockOut] = useState(null)
 
-   
+    
 
+   
     const [time ,setTime] = useState(currenttime)
     
     const today=getDate()
 
     const updateTime=()=>{
-        let currenttime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let currenttime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'});
         setTime(currenttime)
 
 
@@ -32,52 +37,168 @@ const Attendance = () => {
     setInterval(updateTime,1000)
    
 
-    const handleClockIn=()=>{
-        console.log('clocking in')
-        setClockIn(time)
+    const handleClockIn=async()=>{
+        // console.log('clocking in')
+        const { yyyy_mm_dd, dd_mm_yyyy } = getCurrentDate();
+        const data = {
+            clockIn: '7:15 PM',
+            status: 'clocked in',
+            name: profile.fullname,
+            uid: profile.uid,
+            day: dd_mm_yyyy,
+            companyId: profile.companyId,
+            shift:shift.shiftname.value
+        };
+    
+        try {
+            await setDoc(doc(db, 'attendance', profile.companyId, yyyy_mm_dd, profile.uid), data);
+            setClockIn(time);
+        } catch (error) {
+            console.error("Error clocking in: ", error);
+        }
+       
+
     }
 
-    const handleClockOut=()=>{
-        console.log('clocking out')
-        setClockOut(time)
+
+
+
+const handleClockOut=async()=>{
+        // const shift = {
+        //     from: '09:00 AM',
+        //     to: '06:00 PM',
+        //     before: '1:00', // 1 hour before
+        //     after: '0:00'   // 0 hours after
+        //   };
+          
+        //   const attendanceSettingsStrict = {
+        //     allowMaxHours: false,
+        //     allowOvertimeDeviation: true,
+        //     lenient: false,
+        //     lenientHours: '08:00 hours',
+        //     lenientMode: '',
+        //     maxHours: '00:00 hours',
+        //     strict: true,
+        //     strictMode: 'manual',
+        //     strictFullDay: '08:00 hours',
+        //     strictHalfDay: '04:00 hours'
+        //   };
+          
+        //   const attendanceSettingsLenient = {
+        //     allowMaxHours: true,
+        //     allowOvertimeDeviation: true,
+        //     lenient: true,
+        //     lenientHours: '08:00 hours',
+        //     lenientMode: 'manual',
+        //     maxHours: '08:00 hours',
+        //     strict: false,
+        //     strictMode: '',
+        //     strictFullDay: '08:00 hours',
+        //     strictHalfDay: '04:00 hours'
+        //   };
+
+
+
+    const { yyyy_mm_dd, dd_mm_yyyy } = getCurrentDate();
+
+    const{
+            attendanceStatus,
+            workedHours,
+            payableHours,
+            overtime,
+            deviation
+        } = (calculateAttendance(clockIn,'8:30 PM'));
+
+    const data = {
+        clockOut: '8:30 PM',
+        status:attendanceStatus, 
+        workedHours,
+        payableHours,
+        overtime,
+        deviation,
+       
+    };
+
+   
+    try {
+        await setDoc(doc(db, 'attendance', profile.companyId, yyyy_mm_dd, profile.uid), data);
+        setClockOut(time);
+    } catch (error) {
+        console.error("Error clocking in: ", error);
     }
-
-
-    console.log('time',clockIn,clockOut)
+    }
 
 
 
   return (
-    <View style={[styles.root,shadowstyles.shadowStyle]}>
-    <View style={styles.header}>
-      <View style={[styles.date,,{position:'relative',right:7}]}>
-      <ScreenHeaderButton Icon={icons.Calendar} size={16} color='#3385ff'/>
-      <Text style={styles.text}>{today}</Text>
-      </View>
-      <View style={[styles.date,{position:'relative',right:10}]}>
-      <ScreenHeaderButton Icon={icons.Clock} size={16} color='#3385ff'/>
-      <Text  style={styles.text}>{time}</Text>
-      </View>
-      </View>
-      <View style={styles.time}>
-        <Text  style={styles.timeText}>{clockIn || time}</Text>
-        <Text style={styles.timeText}>{clockOut || time}</Text>
 
-      </View>
+    <View className='flex-1 bg-white m-5 rounded-lg p-4 shadow-sm drop-shadow-2xl'> 
+    <View className='flex-row justify-center items-center justify-between'>
+    <Text className='text-base font-medium'>Attendance</Text>
+    <Text className='text-sm text-gray-500 font-medium'>{today}</Text>
+    <Text className='text-base font-medium'>{time}</Text>
+    </View>
+    {shift ? <View>
+    {!clockIn &&<View className='justify-center items-start p-2'>
+        {/* <Ionicons name="sunny" size={24} color="#ebcc34"/> */}
+         <Text className='font-light ml-1 text-sm'>Hello {profile?.fullname},You have a {shift?.shiftname.label} ({shift?.shiftname.value.from} - {shift?.shiftname.value.to})</Text>
+         <Text>Please do not forget to check in and out.</Text>
+    </View>}
+    {!clockIn && <Pressable onPress={handleClockIn}>
+        <View className='w-full justify-center flex-row items-center bg-blue-500 p-2 rounded-xl mt-2'>
+            <Feather name="clock" size={15} color="white" />
+            <Text className='text-white ml-1'>Check in / Out</Text>
 
-      <View style={styles.footer}>
-      <Chip 
-      disabled={clockIn ? true :false}
-      style={[styles.chip,{backgroundColor:clockIn ? 'gray':'#3385ff'}]} 
-      textStyle={[styles.chipText]} 
-      icon={()=> <MaterialCommunityIcons name="login" size={16} color="white" />
-    } 
-    onPress={() => handleClockIn()}>
-        Check In
-        </Chip>
-      <Chip style={[styles.chip,{backgroundColor:clockOut ? 'gray':'red'}]} disabled={clockOut ? true :false} textStyle={styles.chipText}  icon={()=><MaterialCommunityIcons name="logout" size={16} color="white" />
-    }  onPress={() => handleClockOut()}>Check Out</Chip>
-      </View>
+        </View>
+    </Pressable>}
+
+    {clockIn && !clockOut && <Pressable onPress={handleClockOut}>
+        <View className='w-full justify-center flex-row items-center bg-red-500 p-2 rounded-xl mt-2'>
+            <Feather name="clock" size={15} color="white" />
+            <Text className='text-white ml-1'>Check in / Out</Text>
+
+        </View>
+    </Pressable>}
+
+    {/* <Pressable onPress={testing}>
+        <View className='w-full justify-center flex-row items-center bg-red-500 p-2 rounded-xl mt-2'>
+            <Feather name="clock" size={15} color="white" />
+            <Text className='text-white ml-1'>Test</Text>
+
+        </View>
+    </Pressable> */}
+
+    {
+        clockIn && clockOut && <Text className='my-3'>You have completed {calculateTimeDifference(clockIn,clockOut)} hours.</Text>
+    }
+
+    <View className='mt-2 '>
+    <View className='flex-row items-center'>
+    <MaterialIcons name="login" size={20} color="#1d83f0" />
+    <Text className='ml-3'>{clockIn}</Text>
+
+    </View>
+    <View className='h-[1px] bg-gray-300 w-full my-2'></View>
+    <View className='flex-row items-center'>
+    <MaterialIcons name="logout" size={19} color="red" />
+    <Text className='ml-3'>{clockOut}</Text>
+
+    </View>
+
+    </View>
+
+    </View>
+    :
+    <View className='justify-center items-start p-2'>
+        {/* <Ionicons name="sunny" size={24} color="#ebcc34"/> */}
+         <Text className='font-light ml-1 text-sm'>Hello {profile?.fullname},You have no shift assigned today.</Text>
+         <Text>Please contact your reporting manager for any questions.</Text>
+    </View>
+    
+    
+    }
+
+
     </View>
   )
 }
